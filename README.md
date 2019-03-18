@@ -1,2 +1,3 @@
-# symmetrical-octo-memory
-Substitution Cipher
+#Hello everyone!
+am new here
+:P
