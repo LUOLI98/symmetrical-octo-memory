@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+char s1[26]= {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+char s2[50]= {0};
+char s3[50]= {0};
+char ptext[100];
+char ctext[100];
+void p2c(){
+    int j=0,k;
+    srand(time(0));
+    for(int i=0; i<26; i++)
+    {
+        k=rand()%50;//从0-49中得50个数字里面随机取一个
+        while(s2[k]!=0) //s2里面已经有字母了就重新再取一个
+        {
+            k=rand()%50;
+        }
+        s2[k]=s1[i];
+    }
+    for(int i=0; i<50; i++)
+    {
+        if(s2[i]==0)
+            continue;
+        s3[j++]=s2[i];
+    }
+    FILE *f=fopen("./key.txt","w+");
+    fprintf(f,"%s",s3);
+    fclose(f);
+
+
+
+
+    printf("先字母表:");
+    printf("%s\n",s1);
+    printf("后字母表:");
+    printf("%s\n",s3);
+    printf("请输入明文:");
+}
+int tongji(char x[])
+{
+   int i=0;
+   char b;
+   int c[26]={0};
+   while(x[i])
+   {
+	  if(x[i]>='A' && x[i]<='Z')
+	  {    b=x[i];
+           c[b-65]++;
+	  }
+	  if(x[i]>='a' && x[i]<='z')
+	  {
+		 b=x[i];
+         c[b-65-32]++;
+	  }
+      i++;
+   }
+    for(i=0;i<26;i++){
+        printf("Num %c is %d\n",char(i+65),c[i]);
+    }
+}
+int main()
+{
+    p2c();
+    gets(ptext);
+    int m;
+    for(int i=0; ptext[i]; i++)//明文转密文
+    {
+        if(ptext[i]>='a'&&ptext[i]<='z')
+        {
+            m=ptext[i]-'a';
+            ctext[i]=s3[m++];
+        }
+        else
+            ctext[i]='\ ';//或者  ctext[i]=32;
+    }
+    printf("得到得密文:");
+    puts(ctext);
+    FILE *f=fopen("./key.txt","r");
+    fscanf(f,"%s",s3);
+    fclose(f);
+    for(int i=0;ctext[i];i++){
+        if(ctext[i]>='A'&& ctext[i]<='Z'){
+            m=0;
+            while (s3[m]!=ctext[i]) m++;
+            ctext[i]=s1[m]+32;
+        }
+        else
+            ctext[i]='\ ';
+    }
+    printf("得到得明文:");
+    puts(ctext);
+    tongji(ctext);
+    return 0;
+}
+
+
+
